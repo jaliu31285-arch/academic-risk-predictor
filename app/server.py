@@ -254,9 +254,11 @@ def _build_explanation(coerced, threshold=0.5):
 
 
 def _feature_importance_for(model_name):
-    if model_manager is None or not model_manager.models.get(model_name):
+    if model_manager is None:
         return [], []
-    estimator = model_manager.models[model_name]
+    estimator = model_manager.get_model(model_name)
+    if estimator is None:
+        return [], []
     importances = getattr(estimator, "feature_importances_", None)
     if importances is None:
         return [], []
@@ -347,7 +349,7 @@ def api_models():
 @app.route("/api/predict", methods=["POST"])
 def api_predict():
     _ensure_initialized()
-    if model_manager is None or not model_manager.models:
+    if model_manager is None:
         return jsonify({
             "success": False,
             "error": "服务器上没有可用的已训练模型。",
@@ -357,7 +359,7 @@ def api_predict():
     if not model_name:
         available = model_manager.list_available()
         model_name = available[0] if available else None
-    if not model_name or model_name not in model_manager.models:
+    if not model_name or model_name not in model_manager.list_available():
         return jsonify({
             "success": False,
             "error": "请求的模型不可用：{}".format(model_name),
@@ -370,7 +372,7 @@ def api_predict():
         }), 503
     coerced, ordered = _coerce_features(input_values)
     X_df = pd.DataFrame([ordered], columns=list(feature_cols))
-    estimator = model_manager.models[model_name]
+    estimator = model_manager.get_model(model_name)
     try:
         pred_raw = estimator.predict(X_df)
         arr = np.asarray(pred_raw).ravel()
@@ -385,15 +387,13 @@ def api_predict():
             probabilities = [float(p) for p in proba]
         except Exception:
             probabilities = []
-    # Regression score prediction
+    # Regression score prediction (lazy - load regressor from disk only)
     predicted_score = None
     score_min = None
     score_max = None
-    if hasattr(model_manager, "reg_models") and model_manager.reg_models and (
-        model_name in model_manager.reg_models
-    ):
+    reg_estimator = model_manager.get_reg_model(model_name)
+    if reg_estimator is not None:
         try:
-            reg_estimator = model_manager.reg_models[model_name]
             reg_pred = reg_estimator.predict(X_df)
             predicted_score = float(np.asarray(reg_pred).ravel()[0])
             if feature_stats and (TARGET_COL_REG_IN in feature_stats):
@@ -463,14 +463,10 @@ def main():
     app.run(debug=True, host="0.0.0.0", port=5000)
 
 
-# Initialize at module import time (after all functions defined) so importing
-# `app` from outside (e.g. test_client, uwsgi) works correctly.
-try:
-    init_application()
-except Exception as _e:
-    import warnings
-    warnings.warn("启动阶段跳过初始化：" + str(_e))
-
+# NOTE: We no longer auto-init at module import time. gunicorn will import
+# `app.server:app` and on first request _ensure_initialized() will set up
+# model_manager + data. This keeps memory footprint low until actually needed.
 
 if __name__ == "__main__":
-    main()
+    init_application()
+    app.run(debug=True, host="0.0.0.0", port=5000)
