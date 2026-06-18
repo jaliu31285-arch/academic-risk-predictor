@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}仪表盘{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>学业风险预警仪表盘</h1>
+  <p class="lead">
+    基于参考数据集中采集的行为与学业表现特征，预测学生所属的风险等级。
+  </p>
+  <div class="card-row">
+    <div class="card">
+      <h3>已加载模型</h3>
+      <p class="big">{{ models_available }}</p>
+      <small>已训练的分类器，可用于预测</small>
+    </div>
+    <div class="card">
+      <h3>特征维度</h3>
+      <p class="big">{{ features_count }}</p>
+      <small>每个模型使用的输入特征数</small>
+    </div>
+    <div class="card">
+      <h3>风险等级</h3>
+      <p class="big">{{ risk_labels|length }}</p>
+      <small>
+        {% for k, v in risk_labels.items() -%}
+        {{ k }} = {{ v }}{% if not loop.last %}, {% endif %}
+        {%- endfor %}
+      </small>
+    </div>
+  </div>
+  <p>
+    <a class="btn primary" href="{{ url_for('predict_page') }}">开始预测</a>
+    <a class="btn" href="{{ url_for('models_page') }}">查看模型</a>
+  </p>
+</section>
+<section id="status">
+  <h2>服务器实时状态</h2>
+  <pre id="status-json">正在加载 /api/status ...</pre>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+  fetch("{{ url_for('api_status') }}")
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      document.getElementById("status-json").textContent = JSON.stringify(data, null, 2);
+    })
+    .catch(function (err) {
+      document.getElementById("status-json").textContent = String(err);
+    });
+</script>
+{% endblock %}

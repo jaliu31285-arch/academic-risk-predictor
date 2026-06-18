@@ -1,0 +1,16 @@
+{
+  "Gender": [
+    "Female",
+    "Male"
+  ],
+  "Intervention_Recommendation": [
+    "Academic Counseling and Tutoring",
+    "Adaptive Learning Resources",
+    "Regular Monitoring"
+  ],
+  "Academic_Risk_Level": [
+    "High Risk",
+    "Low Risk",
+    "Medium Risk"
+  ]
+}

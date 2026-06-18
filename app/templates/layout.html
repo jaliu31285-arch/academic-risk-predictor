@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}学业风险预警系统{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="brand">学业风险预警系统</div>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">仪表盘</a>
+      <a href="{{ url_for('predict_page') }}">风险预测</a>
+      <a href="{{ url_for('models_page') }}">模型管理</a>
+      <a href="{{ url_for('about_page') }}">关于</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <small>&copy; 学业风险预警项目 · Flask 演示</small>
+  </footer>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>

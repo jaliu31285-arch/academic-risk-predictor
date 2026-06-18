@@ -1,0 +1,23 @@
+{
+  "feature_columns": [
+    "Age",
+    "Gender",
+    "Course_Year",
+    "Attendance_Percentage",
+    "Assignment_Submission_Rate",
+    "Quiz_Average_Score",
+    "Midterm_Score",
+    "Previous_GPA",
+    "Online_Learning_Hours",
+    "Course_Participation_Score",
+    "Forum_Activity_Count",
+    "Login_Frequency_Per_Week",
+    "Learning_Resource_Access_Count",
+    "Late_Submission_Count",
+    "Missing_Assignment_Count",
+    "Study_Plan_Adherence",
+    "Academic_Counseling_Received",
+    "Tutoring_Support_Received",
+    "Adaptive_Learning_Resource_Used"
+  ]
+}

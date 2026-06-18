@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %}风险预测{% endblock %}
+{% block content %}
+<div class="predict-layout">
+  <section class="predict-input">
+    <h1 class="page-title">学生风险预测</h1>
+    <p class="lead">选择一个模型，在每个特征中输入数值（留空自动使用数据集均值），点击下方"预测风险"查看结果。</p>
+
+    <div class="model-picker">
+      <label for="model-select">预测模型</label>
+      <select id="model-select">
+        <option value="">正在加载可用模型...</option>
+      </select>
+    </div>
+
+    <div class="feature-list-header">
+      <h2 class="section-title">特征输入</h2>
+      <div class="quick-actions">
+        <button id="btn-fill-mean" class="btn btn-ghost">用均值填充</button>
+        <button id="btn-reset" class="btn btn-ghost">重置</button>
+      </div>
+    </div>
+
+    <div id="feature-grid" class="feature-grid">
+      <div class="empty-state">正在加载特征...</div>
+    </div>
+
+    <div class="predict-footer">
+      <button id="btn-predict" class="btn btn-primary big">预测风险</button>
+    </div>
+  </section>
+
+  <section class="predict-result-panel">
+    <h2 class="section-title">预测结果</h2>
+    <div id="result-box" class="result-box">
+      <div class="result-placeholder">
+        <div class="placeholder-label">尚未预测</div>
+        <div class="placeholder-hint">在左侧输入特征并点击"预测风险"</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.__FEATURES__ = {{ feature_cols | tojson }};
+  window.__STATS__ = {{ feature_stats | tojson }};
+  window.__RISK_LABELS__ = {{ risk_labels | tojson }};
+  window.__CATEGORICAL__ = {{ categorical | tojson }};
+  window.__FEATURE_ZH__ = {{ feature_zh | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/predict.js') }}"></script>
+{% endblock %}

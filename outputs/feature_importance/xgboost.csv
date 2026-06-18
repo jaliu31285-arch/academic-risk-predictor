@@ -1,0 +1,16 @@
+feature,importance
+Missing_Assignment_Count,0.16662261
+Late_Submission_Count,0.14763528
+Previous_GPA,0.10701706
+Online_Learning_Hours,0.07788871
+Midterm_Score,0.07390623
+Quiz_Average_Score,0.06068441
+Assignment_Submission_Rate,0.053558044
+Attendance_Percentage,0.0488387
+Login_Frequency_Per_Week,0.04042593
+Course_Participation_Score,0.038888257
+Study_Plan_Adherence,0.03630977
+Learning_Resource_Access_Count,0.025877394
+Academic_Counseling_Received,0.022503681
+Forum_Activity_Count,0.0213398
+Age,0.020413509

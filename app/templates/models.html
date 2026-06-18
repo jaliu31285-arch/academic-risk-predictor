@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}模型管理{% endblock %}
+{% block content %}
+<h1>可用模型</h1>
+<p class="lead">
+  项目配置了以下分类器。只有在 <code>models/</code> 目录下存在序列化文件的模型才会在运行时被加载。
+</p>
+
+<h2>已配置的分类器</h2>
+<ul>
+  {% for name in all_models %}
+  <li>
+    <strong>{{ labels.get(name, name) }}</strong>
+    <code>({{ name }})</code>
+    {% if name in available %}
+    <span class="tag ok">已加载</span>
+    {% else %}
+    <span class="tag warn">尚未训练</span>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+<h2>特征重要性</h2>
+<p>选择一个模型，查看各特征对其决策的贡献程度。数值越高，说明该特征在模型中影响越大。</p>
+<div class="fi-controls">
+  <label for="fi-model">选择模型</label>
+  <select id="fi-model">
+    {% for name in available %}
+    <option value="{{ name }}">{{ labels.get(name, name) }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div id="fi-status" class="fi-status">请选择模型...</div>
+
+<div id="fi-chart" class="fi-chart" style="display:none"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.__AVAILABLE__ = {{ available | tojson }};
+  window.__FEATURE_ZH__ = {{ feature_zh | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/models.js') }}"></script>
+{% endblock %}

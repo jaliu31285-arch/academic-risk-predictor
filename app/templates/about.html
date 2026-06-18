@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}关于{% endblock %}
+{% block content %}
+<h1>关于本项目</h1>
+<p>
+  <em>学业风险预警系统</em> 是一个基于 Flask 的演示应用，底层是一条机器学习流水线，使用合成的学生表现数据集训练多个分类器。
+</p>
+
+<h2>目标</h2>
+<p>
+  对每一名学生，模型预测其所属的三个风险等级之一：<strong>低风险</strong>、<strong>中风险</strong> 或 <strong>高风险</strong>。教师和辅导员可以根据预测结果优先安排介入辅导。
+</p>
+
+<h2>工作原理</h2>
+<ul>
+  <li>参考数据集在服务启动时从 <code>data/</code> 目录载入。</li>
+  <li><code>models/</code> 目录下每个已训练的模型文件都会被载入内存。</li>
+  <li><code>/api/predict</code> 接口接收 JSON 格式的特征输入，并返回风险等级及各类别的概率。</li>
+  <li>系统会将输入值与参考数据集的均值进行对比，生成简要的解释。</li>
+</ul>
+
+<h2>接口</h2>
+<ul>
+  <li><code>GET /api/status</code> - 运行时状态摘要</li>
+  <li><code>GET /api/models</code> - 已配置 / 已加载模型列表</li>
+  <li><code>POST /api/predict</code> - 执行一次预测</li>
+  <li><code>GET /api/feature_importance?model=&lt;name&gt;</code> - 查看指定模型的特征重要性</li>
+</ul>
+{% endblock %}
